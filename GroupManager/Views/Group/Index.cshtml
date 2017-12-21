@@ -1,0 +1,28 @@
+﻿@model GroupManager.Models.GroupViewModels.GroupIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Add">Create New Group</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Groups) {
+        <tr>
+            <td>
+                @item.Name |
+                <a> href??</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
