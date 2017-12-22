@@ -1,4 +1,5 @@
-﻿@model GroupManager.Models.GroupViewModels.GroupIndexViewModel
+﻿@using System.ComponentModel.Design
+@model GroupManager.Models.GroupViewModels.GroupIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -20,7 +21,14 @@
         <tr>
             <td>
                 @item.Name |
-                <a> href??</a>
+                @if (item == Model.ActiveGroup)
+                {
+                    <span>Active group</span>
+                }
+                else
+                {
+                    <a asp-action="SetActive" asp-route-groupId="@item.Id">Set as active group</a>
+                }
             </td>
         </tr>
 }

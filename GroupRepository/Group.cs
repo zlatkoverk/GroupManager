@@ -9,6 +9,7 @@ namespace GroupRepository
         public string Name { get; set; }
         public List<User> Users { get; set; }
         public List<Role> Roles { get; set; }
+        public List<Post> Posts { get; set; }
 
         public Group()
         {

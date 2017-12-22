@@ -30,5 +30,15 @@ namespace GroupRepository
         List<Role> GetRoles(Guid groupId);
 
         void AddUser(User user);
+
+        User GetUser(Guid id);
+
+        void SetActive(Guid userId, Guid groupId);
+
+        List<Post> GetPosts(Guid groupId);
+
+        void AddPost(Post post, Guid groupId, Guid userId);
+
+        void UpdatePost(Post post);
     }
 }

@@ -1,7 +1,22 @@
-﻿@{
+﻿@model GroupManager.Models.GroupViewModels.HomeGroupViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<h1>My Groups</h1>
-
-<form asp-action=""></form>
+@if (!Model.AnyActive)
+{
+    <a asp-controller="Group" asp-action="Index">Select your active group</a>
+}
+else
+{
+    <h1>@Model.Name</h1>
+    <a asp-controller="Group" asp-action="AddPost">Add new post</a>
+    @foreach (var post in Model.Posts)
+     {
+         @Html.Partial("PostPartial", post);
+     }
+    @if (Model.Posts == null)
+     {
+         <span>No posts available</span>
+     }
+}

@@ -9,6 +9,7 @@ using GroupRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace GroupManager.Controllers.Groups
 {
@@ -28,8 +29,13 @@ namespace GroupManager.Controllers.Groups
         public async Task<IActionResult> Index()
         {
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
-            
-            return View(new GroupIndexViewModel(){Groups = _repository.GetGroups(new Guid(user.Id))});
+
+            GroupIndexViewModel model = new GroupIndexViewModel
+            {
+                Groups = _repository.GetGroups(Guid.Parse(user.Id)) ?? new List<Group>(),
+                ActiveGroup = _repository.GetUser(Guid.Parse(user.Id)).ActiveGroup
+            };
+            return View(model);
         }
 
         public IActionResult Add()
@@ -46,7 +52,66 @@ namespace GroupManager.Controllers.Groups
                 return View(model);
             }
             Group group = new Group(model.Name);
-            _repository.AddGroup(group, new Guid(user.Id));
+            _repository.AddGroup(group, Guid.Parse(user.Id));
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> SetActive(string groupId)
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
+
+            _repository.SetActive(Guid.Parse(user.Id), Guid.Parse(groupId));
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult AddPost()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPost(AddPostViewModel model)
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            Post post = new Post(model.Title, model.Text);
+            _repository.AddPost(post, _repository.GetUser(Guid.Parse(user.Id)).ActiveGroup.Id, Guid.Parse(user.Id));
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> EditPost(string postId)
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
+            User u = _repository.GetUser(Guid.Parse(user.Id));
+            Post post = _repository.GetPosts(u.ActiveGroup.Id)
+                .FirstOrDefault(p => p.Id == Guid.Parse(postId));
+
+            PostViewModel model = new PostViewModel()
+            {
+                Id = post.Id.ToString(),
+                Text = post.Text,
+                Title = post.Title,
+                TimeModified = post.ModifiedOn,
+                TimePosted = post.CreatedOn,
+                User = post.User.Email
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditPost(PostViewModel model)
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
+            User u = _repository.GetUser(Guid.Parse(user.Id));
+            if (!ModelState.IsValid || !u.Posts.Contains(new Post() {Id = Guid.Parse(model.Id)}))
+            {
+                return RedirectToAction("error");
+            }
+            Post post = new Post(model.Title, model.Text);
+            post.Id = Guid.Parse(model.Id);
+            _repository.UpdatePost(post);
             return RedirectToAction("Index");
         }
     }

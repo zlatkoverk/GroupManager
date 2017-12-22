@@ -14,6 +14,7 @@ namespace GroupRepository
         public List<Post> Posts { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Group> Groups { get; set; }
+        public Group ActiveGroup { get; set; }
 
         public User(string email, string id)
         {
@@ -22,7 +23,7 @@ namespace GroupRepository
             Posts = new List<Post>();
             Comments = new List<Comment>();
             Groups = new List<Group>();
-            Id = Guid.NewGuid();
+            Id = Guid.Parse(id);
         }
 
         public User()
@@ -60,6 +61,11 @@ namespace GroupRepository
         public static bool operator !=(User usr1, User usr2)
         {
             return !(usr1 == usr2);
+        }
+
+        public override string ToString()
+        {
+            return Email;
         }
     }
 }

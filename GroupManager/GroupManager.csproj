@@ -32,8 +32,4 @@
     <ProjectReference Include="..\GroupRepository\GroupRepository.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\Groups\" />
-  </ItemGroup>
-
 </Project>

@@ -26,6 +26,7 @@ namespace GroupRepository
             modelBuilder.Entity<User>().HasMany(user => user.Posts).WithRequired(post => post.User).WillCascadeOnDelete(false);
             modelBuilder.Entity<User>().HasMany(user => user.Comments).WithRequired(comment => comment.User);
             modelBuilder.Entity<User>().HasMany(user => user.Groups).WithMany(group => group.Users);
+            modelBuilder.Entity<User>().HasOptional(user => user.ActiveGroup);
 
             modelBuilder.Entity<Role>().HasKey(role => role.Id);
             modelBuilder.Entity<Role>().Property(role => role.Name).IsRequired();
@@ -48,6 +49,7 @@ namespace GroupRepository
 
             modelBuilder.Entity<Group>().HasKey(group => group.Id);
             modelBuilder.Entity<Group>().Property(group => group.Name);
+            modelBuilder.Entity<Group>().HasMany(group => group.Posts).WithRequired(post=>post.Group).WillCascadeOnDelete(false);
         }
     }
 }

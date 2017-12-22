@@ -12,6 +12,20 @@ namespace GroupRepository
         public DateTime? ModifiedOn { get; set; }
         public List<Comment> Comments { get; set; }
         public User User { get; set; }
+        public Group Group { get; set; }
+
+        public Post(string title, string text)
+        {
+            Title = title;
+            Text = text;
+            CreatedOn = DateTime.Now;
+            Comments = new List<Comment>();
+            Id = Guid.NewGuid();
+        }
+
+        public Post()
+        {
+        }
 
         public override bool Equals(object obj)
         {
