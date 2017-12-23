@@ -79,6 +79,16 @@ namespace GroupRepository
                 .Where(post => post.Group.Id == groupId).OrderByDescending(post => post.CreatedOn).ToList();
         }
 
+        public Post GetPost(Guid postId)
+        {
+            return _context.Posts.Include(post => post.Comments).Include(post => post.Group).FirstOrDefault(post => post.Id == postId);
+        }
+
+        public List<Comment> GetComments(Guid postId)
+        {
+            return _context.Comments.Include(comment => comment.Post).Include(comment => comment.User).Where(comment => comment.Post.Id == postId).OrderBy(comment => comment.CreatedOn).ToList();
+        }
+
         public void AddPost(Post post, Guid groupId, Guid userId)
         {
             User user = GetUser(userId);
@@ -139,6 +149,41 @@ namespace GroupRepository
             post.Comments.Add(comment);
             comment.Post = post;
             _context.SaveChanges();
+        }
+
+        public void SetNick(string value, Guid userId, Guid groupId)
+        {
+            User user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User does not exist" + userId);
+            }
+            Group group = _context.Groups.FirstOrDefault(g => g.Id == groupId);
+            if (group == null)
+            {
+                throw new ArgumentException("Group does not exist" + groupId);
+            }
+            Nick nick = _context.Nicks.FirstOrDefault(nck => nck.User.Id == userId && nck.Group.Id == groupId);
+            if (nick == null)
+            {
+                nick = new Nick(value, user, group);
+                _context.Nicks.Add(nick);
+            }
+            else
+            {
+                nick.Value = value;
+            }
+            _context.SaveChanges();
+        }
+
+        public string GetNick(Guid userId, Guid groupId)
+        {
+            Nick nick = _context.Nicks.FirstOrDefault(nck => nck.User.Id == userId && nck.Group.Id == groupId);
+            if (nick == null)
+            {
+                return _context.Users.FirstOrDefault(user => user.Id == userId)?.Email;
+            }
+            return nick.Value;
         }
     }
 }

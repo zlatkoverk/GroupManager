@@ -13,6 +13,7 @@ namespace GroupRepository
         public IDbSet<Post> Posts { get; set; }
         public IDbSet<Comment> Comments { get; set; }
         public IDbSet<Group> Groups { get; set; }
+        public IDbSet<Nick> Nicks { get; set; }
         /*
         public IDbSet<Invite> Invites { get; set; }
         */
@@ -53,6 +54,12 @@ namespace GroupRepository
             modelBuilder.Entity<Group>().HasKey(group => group.Id);
             modelBuilder.Entity<Group>().Property(group => group.Name);
             modelBuilder.Entity<Group>().HasMany(group => group.Posts).WithRequired(post => post.Group).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Nick>().HasKey(nick => nick.Id);
+            modelBuilder.Entity<Nick>().Property(nick => nick.Value).IsRequired();
+            modelBuilder.Entity<Nick>().HasRequired(nick => nick.Group);
+            modelBuilder.Entity<Nick>().HasRequired(nick => nick.User);
+
             /*
             modelBuilder.Entity<Invite>().HasKey(invite => invite.Id);
             modelBuilder.Entity<Invite>().Property(invite => invite.UserId).IsRequired();

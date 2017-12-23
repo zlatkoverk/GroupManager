@@ -37,6 +37,10 @@ namespace GroupRepository
 
         List<Post> GetPosts(Guid groupId);
 
+        Post GetPost(Guid postId);
+
+        List<Comment> GetComments(Guid postId);
+
         void AddPost(Post post, Guid groupId, Guid userId);
 
         void UpdatePost(Post post);
@@ -46,5 +50,9 @@ namespace GroupRepository
         User GetUser(string email);
 
         void AddComment(Comment comment, Guid userId, Guid postId);
+
+        void SetNick(string value, Guid userId, Guid groupId);
+
+        String GetNick(Guid userId, Guid groupId);
     }
 }

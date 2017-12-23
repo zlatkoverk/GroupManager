@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using GroupManager.Models;
 using GroupManager.Models.GroupViewModels;
@@ -9,9 +8,8 @@ using GroupRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 
-namespace GroupManager.Controllers.Groups
+namespace GroupManager.Controllers
 {
     [Authorize]
     public class GroupController : Controller
@@ -155,19 +153,38 @@ namespace GroupManager.Controllers.Groups
             _repository.AddUserToGroup(addUser.Id, user.ActiveGroup.Id);
             return Redirect("/home");
         }
-
-        //[HttpGet("{postId}")]
+        
         public async Task<IActionResult> Post(string postId)
         {
             ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
             User user = _repository.GetUser(Guid.Parse(appUser.Id));
-            Post post = _repository.GetPosts(user.ActiveGroup.Id)
-                .FirstOrDefault(p => p.Id == Guid.Parse(postId));
+            Post post = _repository.GetPost(Guid.Parse(postId));
+
+            if (post == null || post.Group.Id != user.ActiveGroup.Id)
+            {
+                return Forbid();
+            }
 
             PostViewModel model = new PostViewModel()
             {
-                Comments = post.Comments.OrderBy(comment => comment.CreatedOn).Select(comment => new CommentViewModel(comment)).ToList(),
-                Post = new IndexPostViewModel(post)
+                Comments = _repository.GetComments(post.Id).Select(comment => new CommentViewModel()
+                {
+                    Id = comment.Id.ToString(),
+                    PostId = post.Id.ToString(),
+                    Text = comment.Text,
+                    User = _repository.GetNick(comment.User.Id, post.Group.Id),
+                    TimePosted = comment.CreatedOn,
+                    TimeModified = comment.ModifiedOn
+                }).ToList(),
+                Post = new IndexPostViewModel()
+                {
+                    Id = post.Id.ToString(),
+                    Title = post.Title,
+                    Text = post.Text,
+                    User = _repository.GetNick(post.User.Id, post.Group.Id),
+                    TimePosted = post.CreatedOn,
+                    TimeModified = post.ModifiedOn
+                }
             };
 
             return View(model);
@@ -182,6 +199,28 @@ namespace GroupManager.Controllers.Groups
             _repository.AddComment(comment, Guid.Parse(user.Id), Guid.Parse(postId));
 
             return Redirect("Post?postId=" + postId);
+        }
+
+        public async Task<IActionResult> SetNick()
+        {
+            ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
+            User user = _repository.GetUser(Guid.Parse(appUser.Id));
+            ChangeNickViewModel model = new ChangeNickViewModel() { Nick = _repository.GetNick(user.Id, user.ActiveGroup.Id) };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetNick(ChangeNickViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
+            User user = _repository.GetUser(Guid.Parse(appUser.Id));
+
+            _repository.SetNick(model.Nick, user.Id, user.ActiveGroup.Id);
+            return Redirect("Index");
         }
     }
 }
