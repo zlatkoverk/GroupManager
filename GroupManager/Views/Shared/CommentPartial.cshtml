@@ -4,13 +4,13 @@
         <div class="panel-heading">@Html.DisplayFor(model => model.User)</div>
         <div class="panel-body"><pre class="display-field">@Html.DisplayFor(model => model.Text)</pre></div>
         <div class="panel-footer" align="right">
-            Posted on @Html.DisplayFor(model => model.TimePosted)
+            Posted: @Html.DisplayFor(model => model.TimePosted)
             @if (Model.TimeModified.HasValue)
             {
-                <span>,Modified:</span>
+                <span>| Modified:</span>
                 @Html.DisplayFor(model => model.TimeModified.Value);
             }
-            @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ })
+            <a asp-controller="Comment" asp-action="Edit" asp-route-commentId="@Model.Id">Edit</a>
         </div>
     </div>
 </div>

@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using GroupManager.Models;
 using GroupManager.Models.GroupViewModels;
 using GroupRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GroupManager.Controllers
 {
+    [Authorize]
     public class PostController : Controller
     {
         private readonly IGroupRepository _repository;

@@ -185,5 +185,18 @@ namespace GroupRepository
             }
             return nick.Value;
         }
+
+        public Comment GetComment(Guid commentId)
+        {
+            return _context.Comments.Include(comment=>comment.User).Include(comment=>comment.Post).FirstOrDefault(comment => comment.Id == commentId);
+        }
+
+        public void UpdateComment(Comment comment)
+        {
+            Comment oldComment = _context.Comments.FirstOrDefault(c => c.Id == comment.Id);
+            oldComment.Text = comment.Text;
+            oldComment.ModifiedOn = DateTime.Now;
+            _context.SaveChanges();
+        }
     }
 }

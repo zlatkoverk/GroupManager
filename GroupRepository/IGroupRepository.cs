@@ -54,5 +54,9 @@ namespace GroupRepository
         void SetNick(string value, Guid userId, Guid groupId);
 
         String GetNick(Guid userId, Guid groupId);
+
+        Comment GetComment(Guid commentId);
+
+        void UpdateComment(Comment comment);
     }
 }
