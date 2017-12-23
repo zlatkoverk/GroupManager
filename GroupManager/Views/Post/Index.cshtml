@@ -16,7 +16,7 @@
         @Html.Partial("CommentPartial", comment);
     }
 </div>
-<form asp-controller="Group" asp-action="AddComment" method="post">
+<form asp-controller="Comment" asp-action="Add" method="post">
     <div class="form-group">
         <label for="text" class="control-label">Comment</label>
         <textarea name="text" class="form-control" rows="5" cols="20"></textarea>

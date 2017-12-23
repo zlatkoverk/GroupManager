@@ -10,13 +10,13 @@
 else
 {
     <h1>@Model.Name</h1>
-    <a asp-controller="Group" asp-action="AddPost">Add new post</a>
+    <a asp-controller="Post" asp-action="AddPost">Add new post</a>
     @foreach (var post in Model.Posts)
      {
          @Html.Partial("PostPartial", post);
          <div>
-             <a asp-controller="Group" asp-action="EditPost" asp-route-postId="@post.Id">Edit</a> |
-             <a asp-controller="Group" asp-action="Post" asp-route-postId="@post.Id">Show comments</a>
+             <a asp-controller="Post" asp-action="EditPost" asp-route-postId="@post.Id">Edit</a> |
+             <a asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">Show comments</a>
          </div>
      }
     @if (Model.Posts == null)
