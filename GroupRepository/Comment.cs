@@ -11,6 +11,16 @@ namespace GroupRepository
         public Post Post { get; set; }
         public User User { get; set; }
 
+        public Comment(string text)
+        {
+            Text = text;
+            CreatedOn = DateTime.Now;
+            Id = Guid.NewGuid();
+        }
+
+        public Comment()
+        {
+        }
 
         public override bool Equals(object obj)
         {

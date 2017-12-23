@@ -99,5 +99,46 @@ namespace GroupRepository
             oldPost.ModifiedOn = DateTime.Now;
             _context.SaveChanges();
         }
+
+        public void AddUserToGroup(Guid userId, Guid groupId)
+        {
+            User user = _context.Users.Include(u => u.Groups).FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User does not exist" + userId);
+            }
+            Group group = _context.Groups.Include(g => g.Users).FirstOrDefault(g => g.Id == groupId);
+            if (group == null)
+            {
+                throw new ArgumentException("Group does not exist" + groupId);
+            }
+            user.Groups.Add(group);
+            group.Users.Add(user);
+            _context.SaveChanges();
+        }
+
+        public User GetUser(string email)
+        {
+            return _context.Users.FirstOrDefault(user => user.Email == email);
+        }
+
+        public void AddComment(Comment comment, Guid userId, Guid postId)
+        {
+            User user = _context.Users.Include(u => u.Comments).FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User does not exist" + userId);
+            }
+            Post post = _context.Posts.Include(p => p.Comments).FirstOrDefault(p => p.Id == postId);
+            if (post == null)
+            {
+                throw new ArgumentException("Group does not exist" + postId);
+            }
+            user.Comments.Add(comment);
+            comment.User = user;
+            post.Comments.Add(comment);
+            comment.Post = post;
+            _context.SaveChanges();
+        }
     }
 }

@@ -40,5 +40,11 @@ namespace GroupRepository
         void AddPost(Post post, Guid groupId, Guid userId);
 
         void UpdatePost(Post post);
+
+        void AddUserToGroup(Guid userId, Guid groupId);
+
+        User GetUser(string email);
+
+        void AddComment(Comment comment, Guid userId, Guid postId);
     }
 }

@@ -1,0 +1,29 @@
+﻿@model GroupManager.Models.GroupViewModels.AddUserViewModel
+@{
+    ViewData["Title"] = "AddUser";
+}
+<h2>AddUser</h2>
+<h4>AddUserViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddUser">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserEmail" class="control-label"></label>
+                <input asp-for="UserEmail" class="form-control" />
+                <span asp-validation-for="UserEmail" class="text-danger"></span>
+                @if (Model != null)
+                {
+                    <span class="text-danger">@Model.Message</span>
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

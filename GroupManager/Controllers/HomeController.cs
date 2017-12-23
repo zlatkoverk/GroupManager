@@ -39,7 +39,7 @@ namespace GroupManager.Controllers
             List<Post> posts = _repository.GetPosts(user.ActiveGroup.Id);
             if (posts != null)
             {
-                model.Posts = posts.Select(post => new PostViewModel()
+                model.Posts = posts.Select(post => new IndexPostViewModel()
                 {
                     Id = post.Id.ToString(),
                     Text = post.Text,
@@ -51,7 +51,7 @@ namespace GroupManager.Controllers
             }
             else
             {
-                model.Posts=new List<PostViewModel>();
+                model.Posts=new List<IndexPostViewModel>();
             }
             return View(model);
         }

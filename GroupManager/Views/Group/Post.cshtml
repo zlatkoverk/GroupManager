@@ -1,0 +1,32 @@
+﻿@model GroupManager.Models.GroupViewModels.PostViewModel
+@{
+    ViewData["Title"] = "Post";
+}
+<h2>Post</h2>
+<div>
+    <hr />
+    @Html.Partial("PostPartial", Model.Post)
+    <hr />
+    @if (Model.Comments == null || Model.Comments.Count == 0)
+    {
+        <h4>No comments available</h4>
+    }
+    @foreach (var comment in Model.Comments)
+    {
+        @Html.Partial("CommentPartial", comment);
+    }
+</div>
+<form asp-controller="Group" asp-action="AddComment" method="post">
+    <div class="form-group">
+        <label for="text" class="control-label">Comment</label>
+        <textarea name="text" class="form-control" rows="5" cols="20"></textarea>
+    </div>
+    <input type="hidden" name="postId" value="@Model.Post.Id" />
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-default" />
+    </div>
+</form>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a href="/home">Back to List</a>
+</div>

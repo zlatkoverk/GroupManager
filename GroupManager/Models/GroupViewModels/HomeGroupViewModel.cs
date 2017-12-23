@@ -8,6 +8,6 @@ namespace GroupManager.Models.GroupViewModels
         public bool AnyActive { get; set; }
         public string Name { get; set; }
         public List<User> Users { get; set; }
-        public List<PostViewModel> Posts { get; set; }
+        public List<IndexPostViewModel> Posts { get; set; }
     }
 }

@@ -1,12 +1,11 @@
-﻿@model GroupManager.Models.GroupViewModels.PostViewModel
+﻿@model GroupManager.Models.GroupViewModels.IndexPostViewModel
 
 @{
-    ViewData["Title"] = "EditPost";
+    ViewData["Title"] = "Edit Post";
 }
 
-<h2>EditPost</h2>
+<h2>Edit Post</h2>
 
-<h4>PostViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,7 +18,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Text" class="control-label"></label>
-                <input asp-for="Text" class="form-control" />
+                <textarea asp-for="Text" class="form-control" rows="5" cols="20"></textarea>
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" value="@Model.Id"/>
@@ -31,7 +30,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a href="/home">Back to List</a>
 </div>
 
 @section Scripts {

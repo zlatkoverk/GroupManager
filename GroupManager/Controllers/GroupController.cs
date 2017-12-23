@@ -79,7 +79,7 @@ namespace GroupManager.Controllers.Groups
             }
             Post post = new Post(model.Title, model.Text);
             _repository.AddPost(post, _repository.GetUser(Guid.Parse(user.Id)).ActiveGroup.Id, Guid.Parse(user.Id));
-            return RedirectToAction("Index");
+            return Redirect("/home");
         }
 
         public async Task<IActionResult> EditPost(string postId)
@@ -89,7 +89,16 @@ namespace GroupManager.Controllers.Groups
             Post post = _repository.GetPosts(u.ActiveGroup.Id)
                 .FirstOrDefault(p => p.Id == Guid.Parse(postId));
 
-            PostViewModel model = new PostViewModel()
+            if (post == null)
+            {
+                return NoContent();
+            }
+            if (post.User.Id != u.Id)
+            {
+                return Forbid();
+            }
+
+            IndexPostViewModel model = new IndexPostViewModel()
             {
                 Id = post.Id.ToString(),
                 Text = post.Text,
@@ -100,19 +109,79 @@ namespace GroupManager.Controllers.Groups
             };
             return View(model);
         }
+
         [HttpPost]
-        public async Task<IActionResult> EditPost(PostViewModel model)
+        public async Task<IActionResult> EditPost(IndexPostViewModel model)
         {
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
             User u = _repository.GetUser(Guid.Parse(user.Id));
-            if (!ModelState.IsValid || !u.Posts.Contains(new Post() {Id = Guid.Parse(model.Id)}))
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction("error");
+                return View(model);
             }
-            Post post = new Post(model.Title, model.Text);
-            post.Id = Guid.Parse(model.Id);
+            //Todo permission
+            if (!u.Posts.Contains(new Post() { Id = Guid.Parse(model.Id) }))
+            {
+                return Forbid();
+            }
+            Post post = new Post(model.Title, model.Text) { Id = Guid.Parse(model.Id) };
             _repository.UpdatePost(post);
-            return RedirectToAction("Index");
+            return Redirect("/home");
+        }
+
+        public IActionResult AddUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUser(AddUserViewModel model)
+        {
+            ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
+            User user = _repository.GetUser(Guid.Parse(appUser.Id));
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            //Todo permission
+            User addUser = _repository.GetUser(model.UserEmail);
+            if (addUser == null)
+            {
+                model.Message = "User with that e-mail does not exist";
+                return View(model);
+            }
+
+            _repository.AddUserToGroup(addUser.Id, user.ActiveGroup.Id);
+            return Redirect("/home");
+        }
+
+        //[HttpGet("{postId}")]
+        public async Task<IActionResult> Post(string postId)
+        {
+            ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
+            User user = _repository.GetUser(Guid.Parse(appUser.Id));
+            Post post = _repository.GetPosts(user.ActiveGroup.Id)
+                .FirstOrDefault(p => p.Id == Guid.Parse(postId));
+
+            PostViewModel model = new PostViewModel()
+            {
+                Comments = post.Comments.OrderBy(comment => comment.CreatedOn).Select(comment => new CommentViewModel(comment)).ToList(),
+                Post = new IndexPostViewModel(post)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddComment(string postId, string text)
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
+
+            Comment comment = new Comment(text);
+            _repository.AddComment(comment, Guid.Parse(user.Id), Guid.Parse(postId));
+
+            return Redirect("Post?postId=" + postId);
         }
     }
 }

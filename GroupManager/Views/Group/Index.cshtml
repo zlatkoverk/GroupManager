@@ -1,14 +1,12 @@
 ﻿@using System.ComponentModel.Design
 @model GroupManager.Models.GroupViewModels.GroupIndexViewModel
-
 @{
     ViewData["Title"] = "Index";
 }
-
 <h2>Index</h2>
-
 <p>
-    <a asp-action="Add">Create New Group</a>
+    <a asp-action="Add">Create New Group</a> | 
+    <a asp-action="AddUser">Add User</a>
 </p>
 <table class="table">
     <thead>
@@ -17,20 +15,21 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Groups) {
-        <tr>
-            <td>
-                @item.Name |
-                @if (item == Model.ActiveGroup)
+        @foreach (var item in Model.Groups)
+        {
+            <tr>
+                <td>
+                    @item.Name |
+                    @if (item == Model.ActiveGroup)
                 {
-                    <span>Active group</span>
-                }
-                else
-                {
-                    <a asp-action="SetActive" asp-route-groupId="@item.Id">Set as active group</a>
-                }
-            </td>
-        </tr>
-}
+                        <span>Active group</span>
+                    }
+                    else
+                    {
+                        <a asp-action="SetActive" asp-route-groupId="@item.Id">Set as active group</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

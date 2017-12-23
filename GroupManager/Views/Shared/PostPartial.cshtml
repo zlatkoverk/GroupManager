@@ -1,28 +1,21 @@
-﻿@model GroupManager.Models.GroupViewModels.PostViewModel
-
+﻿@model GroupManager.Models.GroupViewModels.IndexPostViewModel
 <div>
-    <hr />
-        <h3>
-            @Html.DisplayFor(model => model.Title)
-        </h3>
-        <p>
-            @Html.DisplayFor(model => model.Text)
-        </p>
-        <div align="right">
-            @Html.DisplayFor(model => model.User)
-        </div>
+    <h3>
+        @Html.DisplayFor(model => model.Title)
+    </h3>
+    <p>
+        <pre class="text-info">@Html.DisplayFor(model => model.Text)</pre>
+    </p>
     <div align="right">
-        @Html.DisplayFor(model => model.TimePosted)
+        User: @Html.DisplayFor(model => model.User)
     </div>
-    @if (Model.TimeModified.HasValue) { 
+    <div align="right">
+        Posted On: @Html.DisplayFor(model => model.TimePosted)
+    </div>
+    @if (Model.TimeModified.HasValue)
+    {
         <div align="right">
             Modified: @Html.DisplayFor(model => model.TimeModified.Value)
         </div>
-        
     }
-
-</div>
-<div>
-    <a asp-controller="Group" asp-action="EditPost" asp-route-postId="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
 </div>
