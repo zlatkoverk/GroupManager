@@ -14,6 +14,7 @@ namespace GroupRepository
         public IDbSet<Comment> Comments { get; set; }
         public IDbSet<Group> Groups { get; set; }
         public IDbSet<Nick> Nicks { get; set; }
+        public IDbSet<BalanceEntry> Entries { get; set; }
         /*
         public IDbSet<Invite> Invites { get; set; }
         */
@@ -59,6 +60,13 @@ namespace GroupRepository
             modelBuilder.Entity<Nick>().Property(nick => nick.Value).IsRequired();
             modelBuilder.Entity<Nick>().HasRequired(nick => nick.Group);
             modelBuilder.Entity<Nick>().HasRequired(nick => nick.User);
+
+            modelBuilder.Entity<BalanceEntry>().HasKey(entry => entry.Id);
+            modelBuilder.Entity<BalanceEntry>().Property(entry => entry.Value).IsRequired();
+            modelBuilder.Entity<BalanceEntry>().Property(entry => entry.Message).IsOptional();
+            modelBuilder.Entity<BalanceEntry>().HasRequired(entry => entry.User);
+            modelBuilder.Entity<BalanceEntry>().HasRequired(entry => entry.Group);
+            modelBuilder.Entity<BalanceEntry>().Property(entry => entry.Time).IsRequired();
 
             /*
             modelBuilder.Entity<Invite>().HasKey(invite => invite.Id);

@@ -67,13 +67,14 @@ namespace GroupManager.Controllers
             }
 
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
-            Comment comment = new Comment() { Id = Guid.Parse(model.Id), Text = model.Text };
+            Comment comment = _repository.GetComment(Guid.Parse(model.Id));
 
             if (comment.User.Id != _repository.GetUser(Guid.Parse(user.Id)).Id)
             {
                 return Forbid();
             }
-            
+
+            comment.Text = model.Text;
             _repository.UpdateComment(comment);
             return Redirect("/Post?postId=" + model.PostId);
         }

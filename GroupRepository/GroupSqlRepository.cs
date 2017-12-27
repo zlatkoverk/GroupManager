@@ -211,5 +211,33 @@ namespace GroupRepository
             oldUser.Surname = user.Surname;
             _context.SaveChanges();
         }
+
+        public List<BalanceEntry> GetBalanceEntries(Guid groupId)
+        {
+            return _context.Entries.Include(e => e.User).Include(e => e.Group).Where(e => e.Group.Id == groupId).ToList();
+        }
+
+        public void AddBalanceEntry(Guid userId, Guid groupId, double value, string message)
+        {
+            User user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User does not exist" + userId);
+            }
+            Group group = _context.Groups.FirstOrDefault(g => g.Id == groupId);
+            if (group == null)
+            {
+                throw new ArgumentException("Group does not exist" + groupId);
+            }
+            BalanceEntry entry = new BalanceEntry(user, group, value, message);
+            _context.Entries.Add(entry);
+            _context.SaveChanges();
+        }
+
+        public void DeleteBalanceEntry(Guid id)
+        {
+            _context.Entries.Remove(_context.Entries.FirstOrDefault(e => e.Id == id));
+            _context.SaveChanges();
+        }
     }
 }

@@ -62,5 +62,11 @@ namespace GroupRepository
         List<User> GetUsers(Guid groupId);
 
         void UpdateUser(User user);
+
+        List<BalanceEntry> GetBalanceEntries(Guid groupId);
+
+        void AddBalanceEntry(Guid userId, Guid groupId, double value, string message);
+
+        void DeleteBalanceEntry(Guid id);
     }
 }

@@ -1,0 +1,42 @@
+﻿@model GroupManager.Models.BalanceViewModels.BalanceIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<hr />
+<div>
+    <a asp-action="Add">Add funds</a> |
+    <a asp-action="Retrieve">Retrieve funds</a> |
+    <a asp-controller="Group" asp-action="Index">Back</a>
+</div>
+<hr />
+<div>
+    @if (Model.Entries != null && Model.Entries.Count != 0)
+    {
+        <h3>Balance: @Html.DisplayFor(model => model.CurrentBalance)</h3>
+
+        <table class="table">
+            <tr>
+                <th>User</th>
+                <th>Value</th>
+                <th>Message</th>
+                <th>Time</th>
+            </tr>
+            @foreach (var entry in Model.Entries)
+            {
+                <tr>
+                    <td>@entry.User</td>
+                    <td>@entry.Value</td>
+                    <td>@entry.Message</td>
+                    <td>@entry.Time</td>
+                    <td><a asp-action="Delete" asp-route-entryId="@entry.Id">Delete</a></td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <h3 align="center">Your group has no balance entries so far</h3>
+    }
+
+</div>
