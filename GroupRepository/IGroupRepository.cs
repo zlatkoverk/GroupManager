@@ -58,5 +58,9 @@ namespace GroupRepository
         Comment GetComment(Guid commentId);
 
         void UpdateComment(Comment comment);
+
+        List<User> GetUsers(Guid groupId);
+
+        void UpdateUser(User user);
     }
 }

@@ -66,7 +66,14 @@ namespace GroupManager.Controllers
                 return View(model);
             }
 
-            Comment comment = new Comment(){Id = Guid.Parse(model.Id), Text = model.Text};
+            ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
+            Comment comment = new Comment() { Id = Guid.Parse(model.Id), Text = model.Text };
+
+            if (comment.User.Id != _repository.GetUser(Guid.Parse(user.Id)).Id)
+            {
+                return Forbid();
+            }
+            
             _repository.UpdateComment(comment);
             return Redirect("/Post?postId=" + model.PostId);
         }

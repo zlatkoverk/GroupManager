@@ -188,7 +188,7 @@ namespace GroupRepository
 
         public Comment GetComment(Guid commentId)
         {
-            return _context.Comments.Include(comment=>comment.User).Include(comment=>comment.Post).FirstOrDefault(comment => comment.Id == commentId);
+            return _context.Comments.Include(comment => comment.User).Include(comment => comment.Post).FirstOrDefault(comment => comment.Id == commentId);
         }
 
         public void UpdateComment(Comment comment)
@@ -196,6 +196,19 @@ namespace GroupRepository
             Comment oldComment = _context.Comments.FirstOrDefault(c => c.Id == comment.Id);
             oldComment.Text = comment.Text;
             oldComment.ModifiedOn = DateTime.Now;
+            _context.SaveChanges();
+        }
+
+        public List<User> GetUsers(Guid groupId)
+        {
+            return _context.Groups.Include(group => group.Users).FirstOrDefault(group => group.Id == groupId).Users;
+        }
+
+        public void UpdateUser(User user)
+        {
+            User oldUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
+            oldUser.Name = user.Name;
+            oldUser.Surname = user.Surname;
             _context.SaveChanges();
         }
     }
