@@ -239,5 +239,88 @@ namespace GroupRepository
             _context.Entries.Remove(_context.Entries.FirstOrDefault(e => e.Id == id));
             _context.SaveChanges();
         }
+
+        public List<Event> GetEvents(Guid groupId)
+        {
+            return _context.Events.Include(e => e.UsersAttending).Include(e => e.UsersInvited)
+                .Include(e => e.UsersNotAttending).Where(e => e.Group.Id == groupId).OrderByDescending(e => e.Time)
+                .ToList();
+        }
+
+        public void AddGroupEvent(string name, string text, DateTime time, Guid groupId)
+        {
+            Group group = _context.Groups.Include(g => g.Events).FirstOrDefault(g => g.Id == groupId);
+            Event e = new Event(name, text, time)
+            {
+                UsersInvited = GetUsers(groupId),
+                Group = group
+            };
+            group.Events.Add(e);
+            _context.Events.Add(e);
+            _context.SaveChanges();
+        }
+
+        public void RemoveEvent(Guid eventId)
+        {
+            Event e = _context.Events.FirstOrDefault(ev => ev.Id == eventId);
+            _context.Events.Remove(e);
+            _context.SaveChanges();
+        }
+
+        public void UpdateEvent(Event e)
+        {
+            Event oldEvent = _context.Events.FirstOrDefault(ev => ev.Id == e.Id);
+            oldEvent.Name = e.Name;
+            oldEvent.Text = e.Text;
+            oldEvent.Time = e.Time;
+            _context.SaveChanges();
+        }
+
+        public void SetAttending(Guid userId, Guid eventId)
+        {
+            User user = GetUser(userId);
+            Event e = _context.Events.Include(ev => ev.UsersAttending).Include(ev => ev.UsersNotAttending).Include(ev => ev.UsersInvited).FirstOrDefault(ev => ev.Id == eventId);
+            if (e.UsersInvited.Contains(user))
+            {
+                e.UsersInvited.Remove(user);
+            } else if (e.UsersNotAttending.Contains(user))
+            {
+                e.UsersNotAttending.Remove(user);
+            }
+            e.UsersAttending.Add(user);
+            _context.SaveChanges();
+        }
+
+        public void SetNotAttending(Guid userId, Guid eventId)
+        {
+            User user = GetUser(userId);
+            Event e = _context.Events.Include(ev => ev.UsersAttending).Include(ev => ev.UsersNotAttending).Include(ev => ev.UsersInvited).FirstOrDefault(ev => ev.Id == eventId);
+            if (e.UsersInvited.Contains(user))
+            {
+                e.UsersInvited.Remove(user);
+            }
+            else if (e.UsersAttending.Contains(user))
+            {
+                e.UsersAttending.Remove(user);
+            }
+            e.UsersNotAttending.Add(user);
+            _context.SaveChanges();
+        }
+
+        public void SetInvited(Guid userId, Guid eventId)
+        {
+            User user = GetUser(userId);
+            Event e = _context.Events.Include(ev => ev.UsersAttending).Include(ev => ev.UsersNotAttending).Include(ev => ev.UsersInvited).FirstOrDefault(ev => ev.Id == eventId);
+            if (e.UsersAttending.Contains(user))
+            {
+                e.UsersAttending.Remove(user);
+            }
+            else if (e.UsersNotAttending.Contains(user))
+            {
+                e.UsersNotAttending.Remove(user);
+            }
+            e.UsersInvited.Add(user);
+            _context.SaveChanges();
+        }
     }
 }

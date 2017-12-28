@@ -10,6 +10,7 @@ namespace GroupRepository
         public List<User> Users { get; set; }
         public List<Role> Roles { get; set; }
         public List<Post> Posts { get; set; }
+        public List<Event> Events { get; set; }
 
         public Group()
         {
@@ -20,6 +21,8 @@ namespace GroupRepository
             Name = name;
             Users = new List<User>();
             Roles = new List<Role>();
+            Posts = new List<Post>();
+            Events = new List<Event>();
             Id = Guid.NewGuid();
         }
 
@@ -44,7 +47,7 @@ namespace GroupRepository
             {
                 return true;
             }
-            if (ReferenceEquals(group1, null) || ReferenceEquals(group2, null))
+            if (group1 is null || group2 is null)
             {
                 return false;
             }

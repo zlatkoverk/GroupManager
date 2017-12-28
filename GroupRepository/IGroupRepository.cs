@@ -68,5 +68,17 @@ namespace GroupRepository
         void AddBalanceEntry(Guid userId, Guid groupId, double value, string message);
 
         void DeleteBalanceEntry(Guid id);
+
+        List<Event> GetEvents(Guid groupId);
+
+        void AddGroupEvent(string name, string text, DateTime time, Guid groupId);
+
+        void RemoveEvent(Guid eventId);
+
+        void UpdateEvent(Event e);
+
+        void SetAttending(Guid userId, Guid eventId);
+        void SetNotAttending(Guid userId, Guid eventId);
+        void SetInvited(Guid userId, Guid eventId);
     }
 }

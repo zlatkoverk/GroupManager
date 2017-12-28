@@ -220,6 +220,7 @@
   <ItemGroup>
     <Compile Include="BalanceEntry.cs" />
     <Compile Include="Comment.cs" />
+    <Compile Include="Event.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="GroupDbContext.cs" />
     <Compile Include="GroupSqlRepository.cs" />

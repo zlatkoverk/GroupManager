@@ -34,7 +34,8 @@ namespace GroupManager.Controllers
             UserViewModel model = new UserViewModel()
             {
                 Name = user.Name,
-                Surname = user.Surname
+                Surname = user.Surname,
+                PictureURI = user.Picture
             };
 
             return View(model);
@@ -52,6 +53,7 @@ namespace GroupManager.Controllers
 
             user.Name = model.Name;
             user.Surname = model.Surname;
+            user.Picture = model.PictureURI;
 
             _repository.UpdateUser(user);
 
@@ -76,6 +78,29 @@ namespace GroupManager.Controllers
                 Nick = _repository.GetNick(u.Id, user.ActiveGroup.Id),
                 Surname = u.Surname
             }).ToList());
+        }
+
+        public async Task<IActionResult> Details(string userId)
+        {
+            ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
+            User currentUser = _repository.GetUser(Guid.Parse(appUser.Id));
+            User user = _repository.GetUser(Guid.Parse(userId));
+            if (user == null)
+            {
+                return Forbid();
+            }
+
+            UserViewModel model = new UserViewModel()
+            {
+                Email = user.Email,
+                Id = userId,
+                Name = user.Name,
+                Nick = _repository.GetNick(user.Id, currentUser.ActiveGroup.Id),
+                PictureURI = user.Picture,
+                Surname = user.Surname
+            };
+
+            return View(model);
         }
     }
 }

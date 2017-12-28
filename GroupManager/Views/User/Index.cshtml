@@ -7,6 +7,10 @@
 <h2>Edit</h2>
 
 <hr />
+@if (!string.IsNullOrEmpty(Model.PictureURI))
+{
+    <img src="@Model.PictureURI"/>
+}
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Index" enctype="multipart/form-data" method="post">
@@ -20,6 +24,10 @@
                 <label asp-for="Surname" class="control-label"></label>
                 <input asp-for="Surname" class="form-control" />
                 <span asp-validation-for="Surname" class="text-danger"></span>
+            </div><div class="form-group">
+                <label asp-for="PictureURI" class="control-label"></label>
+                <input asp-for="PictureURI" class="form-control" />
+                <span asp-validation-for="PictureURI" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" value="@Model.Id" />
             <div class="form-group">

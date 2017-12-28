@@ -15,6 +15,7 @@ namespace GroupRepository
         public IDbSet<Group> Groups { get; set; }
         public IDbSet<Nick> Nicks { get; set; }
         public IDbSet<BalanceEntry> Entries { get; set; }
+        public IDbSet<Event> Events { get; set; }
         /*
         public IDbSet<Invite> Invites { get; set; }
         */
@@ -32,6 +33,7 @@ namespace GroupRepository
             modelBuilder.Entity<User>().HasMany(user => user.Comments).WithRequired(comment => comment.User);
             modelBuilder.Entity<User>().HasMany(user => user.Groups).WithMany(group => group.Users);
             modelBuilder.Entity<User>().HasOptional(user => user.ActiveGroup);
+            modelBuilder.Entity<User>().Property(user => user.Picture);
 
             modelBuilder.Entity<Role>().HasKey(role => role.Id);
             modelBuilder.Entity<Role>().Property(role => role.Name).IsRequired();
@@ -55,6 +57,7 @@ namespace GroupRepository
             modelBuilder.Entity<Group>().HasKey(group => group.Id);
             modelBuilder.Entity<Group>().Property(group => group.Name);
             modelBuilder.Entity<Group>().HasMany(group => group.Posts).WithRequired(post => post.Group).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Group>().HasMany(group => group.Events).WithRequired(e => e.Group).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Nick>().HasKey(nick => nick.Id);
             modelBuilder.Entity<Nick>().Property(nick => nick.Value).IsRequired();
@@ -67,6 +70,14 @@ namespace GroupRepository
             modelBuilder.Entity<BalanceEntry>().HasRequired(entry => entry.User);
             modelBuilder.Entity<BalanceEntry>().HasRequired(entry => entry.Group);
             modelBuilder.Entity<BalanceEntry>().Property(entry => entry.Time).IsRequired();
+
+            modelBuilder.Entity<Event>().HasKey(e => e.Id);
+            modelBuilder.Entity<Event>().HasMany(e => e.UsersAttending);
+            modelBuilder.Entity<Event>().HasMany(e => e.UsersInvited);
+            modelBuilder.Entity<Event>().HasMany(e => e.UsersNotAttending);
+            modelBuilder.Entity<Event>().Property(e => e.Name).IsRequired();
+            modelBuilder.Entity<Event>().Property(e => e.Text).IsRequired();
+            modelBuilder.Entity<Event>().Property(e => e.Time).IsRequired();
 
             /*
             modelBuilder.Entity<Invite>().HasKey(invite => invite.Id);

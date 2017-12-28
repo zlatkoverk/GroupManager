@@ -1,0 +1,98 @@
+﻿@model GroupManager.Models.EventViewModels.EventViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>EventViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Text)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Time)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Time)
+        </dd>
+    </dl>
+</div>
+<h4>My status: @Model.CurrentUserStatus</h4>
+<a asp-action="SetStatus" asp-route-eventId="@Model.Id" asp-route-status="ATTENDING">Attending</a> |
+<a asp-action="SetStatus" asp-route-eventId="@Model.Id" asp-route-status="NOT_ATTENDING">Not Attending</a> |
+<a asp-action="SetStatus" asp-route-eventId="@Model.Id" asp-route-status="INVITED">Invited</a>
+<hr/>
+<h3>Users attending:</h3>
+@if (Model.UsersAttending == null || Model.UsersAttending.Count == 0)
+{
+    <h4 align="center">No one is attending this event</h4>
+}
+else
+{
+    <table>
+        @foreach (var user in Model.UsersAttending)
+        {
+            <tr>
+                <td><a asp-controller="User" asp-action="Details" asp-route-userId="@user.Id">@user.Nick</a></td>
+            </tr>
+        }
+    </table>
+}
+
+<h3>Users not attending:</h3>
+@if (Model.UsersNotAttending == null || Model.UsersNotAttending.Count == 0)
+{
+    <h4 align="center">---</h4>
+}
+else
+{
+    <table>
+        @foreach (var user in Model.UsersNotAttending)
+        {
+            <tr>
+                <td><a asp-controller="User" asp-action="Details" asp-route-userId="@user.Id">@user.Nick</a></td>
+            </tr>
+        }
+    </table>
+}
+
+<h3>Users invited:</h3>
+@if (Model.UsersInvited == null || Model.UsersInvited.Count == 0)
+{
+    <h4 align="center">---</h4>
+}
+else
+{
+    <table>
+        @foreach (var user in Model.UsersInvited)
+        {
+            <tr>
+                <td><a asp-controller="User" asp-action="Details" asp-route-userId="@user.Id">@user.Nick</a></td>
+            </tr>
+        }
+    </table>
+}
+<hr/>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { eventId = Model.Id }) |
+    <a asp-action="Index">Back to List</a>
+</div>

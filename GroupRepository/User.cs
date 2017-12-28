@@ -15,6 +15,7 @@ namespace GroupRepository
         public List<Comment> Comments { get; set; }
         public List<Group> Groups { get; set; }
         public Group ActiveGroup { get; set; }
+        public string Picture { get; set; }
 
         public User(string email, string id)
         {
