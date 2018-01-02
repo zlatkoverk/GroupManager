@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Remove="Properties\PublishProfiles\GroupManager007 - Web Deploy.pubxml" />
+    <None Remove="Properties\PublishProfiles\GroupManager20180102094542 - Web Deploy.pubxml" />
   </ItemGroup>
 
 
