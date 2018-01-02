@@ -56,7 +56,7 @@ namespace GroupRepository
 
             modelBuilder.Entity<Group>().HasKey(group => group.Id);
             modelBuilder.Entity<Group>().Property(group => group.Name);
-            modelBuilder.Entity<Group>().HasMany(group => group.Posts).WithRequired(post => post.Group).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Group>().HasMany(group => group.Posts).WithOptional(post => post.Group).WillCascadeOnDelete(false);
             modelBuilder.Entity<Group>().HasMany(group => group.Events).WithRequired(e => e.Group).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Nick>().HasKey(nick => nick.Id);
@@ -78,6 +78,7 @@ namespace GroupRepository
             modelBuilder.Entity<Event>().Property(e => e.Name).IsRequired();
             modelBuilder.Entity<Event>().Property(e => e.Text).IsRequired();
             modelBuilder.Entity<Event>().Property(e => e.Time).IsRequired();
+            modelBuilder.Entity<Event>().HasMany(e => e.Posts).WithOptional(post => post.Event).WillCascadeOnDelete(false);
 
             /*
             modelBuilder.Entity<Invite>().HasKey(invite => invite.Id);

@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-GroupManager-9140F4BE-2217-42A8-A786-5FA09577E1B3</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.2.0" />
@@ -30,6 +34,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GroupRepository\GroupRepository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
 </Project>

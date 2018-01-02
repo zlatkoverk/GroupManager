@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GroupManager.Models;
 using GroupManager.Models.EventViewModels;
+using GroupManager.Models.GroupViewModels;
 using GroupManager.Models.UserViewModels;
 using GroupRepository;
 using Microsoft.AspNetCore.Authorization;
@@ -137,61 +138,73 @@ namespace GroupManager.Controllers
 
             }
 
+            Func<GroupRepository.User, UserViewModel> mapperFunc = u => new UserViewModel()
+            {
+                Id = u.Id.ToString(),
+                Nick = _repository.GetNick(u.Id, user.ActiveGroup.Id),
+                Name = u.Name,
+                Surname = u.Surname,
+                Email = u.Email,
+                PictureURI = u.Picture
+            };
+
             EventViewModel model = new EventViewModel()
             {
                 Id = e.Id.ToString(),
                 Name = e.Name,
                 Text = e.Text,
                 Time = e.Time,
-                UsersAttending = e.UsersAttending.Select(u => new UserViewModel()
+                UsersAttending = e.UsersAttending.Select(mapperFunc).ToList(),
+                UsersNotAttending = e.UsersNotAttending.Select(mapperFunc).ToList(),
+                UsersInvited = e.UsersInvited.Select(mapperFunc).ToList(),
+                CurrentUserStatus = e.UsersAttending.Contains(user) ? "ATTENDING" : e.UsersNotAttending.Contains(user) ? "NOT_ATTENDING" : "INVITED",
+                Posts = _repository.GetEventPosts(e.Id).Select(p => new IndexPostViewModel()
                 {
-                    Id = u.Id.ToString(),
-                    Nick = _repository.GetNick(u.Id, user.ActiveGroup.Id)
-                }).ToList(),
-                UsersNotAttending = e.UsersNotAttending.Select(u => new UserViewModel()
-                {
-                    Id = u.Id.ToString(),
-                    Nick = _repository.GetNick(u.Id, user.ActiveGroup.Id)
-                }).ToList(),
-                UsersInvited = e.UsersInvited.Select(u => new UserViewModel()
-                {
-                    Id = u.Id.ToString(),
-                    Nick = _repository.GetNick(u.Id, user.ActiveGroup.Id)
-                }).ToList(),
-                CurrentUserStatus = e.UsersAttending.Contains(user) ? "ATTENDING" : e.UsersNotAttending.Contains(user) ? "NOT_ATTENDING" : "INVITED"
-        };
+                    Id = p.Id.ToString(),
+                    User = p.User.Id.ToString(),
+                    Text = p.Text,
+                    TimeModified = p.ModifiedOn,
+                    TimePosted = p.CreatedOn,
+                    Title = p.Title
+                }).ToList()
+            };
 
             return View(model);
-    }
-
-    public async Task<IActionResult> SetStatus(string eventId, string status)
-    {
-        ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
-        User user = _repository.GetUser(Guid.Parse(appUser.Id));
-
-        Event e = _repository.GetEvents(user.ActiveGroup.Id).FirstOrDefault(ev => ev.Id.ToString() == eventId);
-        if (e == null)
-        {
-            return Forbid();
-
         }
 
-        switch (status)
+        public async Task<IActionResult> SetStatus(string eventId, string status)
         {
-            case "ATTENDING":
-                _repository.SetAttending(user.Id, e.Id);
-                break;
-            case "NOT_ATTENDING":
-                _repository.SetNotAttending(user.Id, e.Id);
-                break;
-            case "INVITED":
-                _repository.SetInvited(user.Id, e.Id);
-                break;
-            default:
+            ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
+            User user = _repository.GetUser(Guid.Parse(appUser.Id));
+
+            Event e = _repository.GetEvents(user.ActiveGroup.Id).FirstOrDefault(ev => ev.Id.ToString() == eventId);
+            if (e == null)
+            {
                 return Forbid();
+
+            }
+
+            switch (status)
+            {
+                case "ATTENDING":
+                    _repository.SetAttending(user.Id, e.Id);
+                    break;
+                case "NOT_ATTENDING":
+                    _repository.SetNotAttending(user.Id, e.Id);
+                    break;
+                case "INVITED":
+                    _repository.SetInvited(user.Id, e.Id);
+                    break;
+                default:
+                    return Forbid();
+            }
+
+            return RedirectToAction("Details", new { eventId = e.Id });
         }
 
-        return RedirectToAction("Details", new { eventId = e.Id });
+        public IActionResult AddPost(string eventId)
+        {
+            return RedirectToAction("AddPost", "Post", new { eventId = eventId });
+        }
     }
-}
 }

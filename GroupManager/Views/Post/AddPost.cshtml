@@ -1,11 +1,8 @@
 ﻿@model GroupManager.Models.GroupViewModels.AddPostViewModel
-
 @{
     ViewData["Title"] = "AddPost";
 }
-
 <h2>Add Post</h2>
-
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -21,14 +18,13 @@
                 <textarea asp-for="Text" class="form-control" rows="5" cols="20"></textarea>
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
+            <input type="hidden" name="eventId" value="@Model.EventId" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
-
 <div>
     <a href="/home">Back to List</a>
 </div>
-

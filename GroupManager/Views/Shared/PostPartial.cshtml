@@ -3,19 +3,27 @@
     <h3>
         @Html.DisplayFor(model => model.Title)
     </h3>
-    <p>
-        <pre class="text-info">@Html.DisplayFor(model => model.Text)</pre>
-    </p>
-    <div align="right">
-        User: @Html.DisplayFor(model => model.User)
-    </div>
-    <div align="right">
-        Posted On: @Html.DisplayFor(model => model.TimePosted)
-    </div>
-    @if (Model.TimeModified.HasValue)
-    {
-        <div align="right">
-            Modified: @Html.DisplayFor(model => model.TimeModified.Value)
+
+
+    <div class="row">
+        <div class="col-md-3">
+            @await Component.InvokeAsync("User", Model.User)
         </div>
-    }
+        <div class="col-md-9">
+            <p>
+                <pre class="text-info">@Html.DisplayFor(model => model.Text)</pre>
+            </p>
+        </div>
+    </div>
+    <div align="right">
+        <span class="label label-success">
+            Posted: @Html.DisplayFor(model => model.TimePosted)
+        </span>
+        @if (Model.TimeModified.HasValue)
+        {
+            <span class="label label-info">
+                Modified: @Html.DisplayFor(model => model.TimeModified.Value)
+            </span>
+        }
+    </div>
 </div>

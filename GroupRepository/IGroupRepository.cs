@@ -80,5 +80,7 @@ namespace GroupRepository
         void SetAttending(Guid userId, Guid eventId);
         void SetNotAttending(Guid userId, Guid eventId);
         void SetInvited(Guid userId, Guid eventId);
+        void AddEventPost(Post post, Guid eventId, Guid userId);
+        List<Post> GetEventPosts(Guid eventId);
     }
 }

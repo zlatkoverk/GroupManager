@@ -1,15 +1,15 @@
 ﻿@model GroupManager.Models.UserViewModels.UserViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Edit user";
 }
 
-<h2>Edit</h2>
+<h2>Edit User</h2>
 
 <hr />
 @if (!string.IsNullOrEmpty(Model.PictureURI))
 {
-    <img src="@Model.PictureURI"/>
+    <img class="img-thumbnail" src="@Model.PictureURI"/>
 }
 <div class="row">
     <div class="col-md-4">

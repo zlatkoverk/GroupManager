@@ -31,6 +31,11 @@ namespace GroupManager.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(string postId, string text)
         {
+            if (string.IsNullOrEmpty(text))
+            {
+                return Redirect("/Post?postId=" + postId);
+            }
+
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
 
             Comment comment = new Comment(text);

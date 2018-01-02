@@ -1,16 +1,15 @@
 ﻿@model GroupManager.Models.GroupViewModels.AddUserViewModel
 @{
-    ViewData["Title"] = "AddUser";
+    ViewData["Title"] = "Add user in group";
 }
-<h2>AddUser</h2>
-<h4>AddUserViewModel</h4>
+<h2>Add user in group</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="AddUser">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="UserEmail" class="control-label"></label>
+                <label asp-for="UserEmail" class="control-label">E-Mail</label>
                 <input asp-for="UserEmail" class="form-control" />
                 <span asp-validation-for="UserEmail" class="text-danger"></span>
                 @if (Model != null)
@@ -25,5 +24,5 @@
     </div>
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back</a>
 </div>

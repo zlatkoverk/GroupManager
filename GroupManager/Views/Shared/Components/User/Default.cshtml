@@ -1,0 +1,23 @@
+﻿@model GroupManager.Models.UserViewModels.UserViewModel
+<div>
+    @if (!string.IsNullOrEmpty(Model.Nick))
+    {
+        <div align="center" class="h4"><abbr title="@Model.Name @Model.Surname">@Model.Nick</abbr></div>
+    }
+    else if (!string.IsNullOrEmpty(Model.Name) || !string.IsNullOrEmpty(Model.Surname))
+    {
+        <div align="center">@Model.Name @Model.Surname</div>
+    }
+    else
+    {
+        <div align="center">@Model.Email</div>
+    }
+    @if (!string.IsNullOrEmpty(Model.PictureURI))
+    {
+        <img class="img-thumbnail" src="@Model.PictureURI" />
+    }
+    else
+    {
+        <img class="img-thumbnail" src="images/noprofile.png" height="40" width="40" />
+    }
+</div>

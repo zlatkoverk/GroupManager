@@ -1,16 +1,17 @@
 ﻿@model GroupManager.Models.GroupViewModels.CommentViewModel
-<div class="container">
-    <div class="panel panel-default">
-        <div class="panel-heading">@Html.DisplayFor(model => model.User)</div>
-        <div class="panel-body"><pre class="display-field">@Html.DisplayFor(model => model.Text)</pre></div>
-        <div class="panel-footer" align="right">
-            Posted: @Html.DisplayFor(model => model.TimePosted)
-            @if (Model.TimeModified.HasValue)
-            {
-                <span>| Modified:</span>
-                @Html.DisplayFor(model => model.TimeModified.Value);
-            }
-            <a asp-controller="Comment" asp-action="Edit" asp-route-commentId="@Model.Id">Edit</a>
+    <div class="panel">
+        <div class="row">
+            <div class="col-md-10">
+                <pre class="display-field">@Model.Text</pre>
+            </div>
+            <div class="col-md-2">
+                @await Component.InvokeAsync("User", Model.User)
+            </div>
         </div>
+        <span class="label label-success">Posted: @Html.DisplayFor(model => model.TimePosted)</span>
+        @if (Model.TimeModified.HasValue)
+        {
+            <span class="label label-info">Modified: @Model.TimeModified.Value</span>
+        }
+        <a asp-controller="Comment" asp-action="Edit" asp-route-commentId="@Model.Id">Edit</a>
     </div>
-</div>

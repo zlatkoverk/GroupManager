@@ -17,7 +17,6 @@ namespace GroupManager.Models.GroupViewModels
         public string User { get; set; }
         public DateTime TimePosted { get; set; }
         public DateTime? TimeModified { get; set; }
-
-        public IndexPostViewModel() { }
+        public string Event { get; set; }
     }
 }

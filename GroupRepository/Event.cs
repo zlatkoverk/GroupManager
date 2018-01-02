@@ -13,6 +13,7 @@ namespace GroupRepository
         public string Name { get; set; }
         public string Text { get; set; }
         public DateTime Time { get; set; }
+        public List<Post> Posts { get; set; }
 
         public Event(string name, string text, DateTime time)
         {
@@ -23,6 +24,7 @@ namespace GroupRepository
             UsersAttending = new List<User>();
             UsersInvited = new List<User>();
             UsersNotAttending = new List<User>();
+            Posts = new List<Post>();
         }
 
         public Event() { }

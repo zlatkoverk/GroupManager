@@ -46,7 +46,8 @@ namespace GroupManager.Controllers
                     Title = post.Title,
                     TimePosted = post.CreatedOn,
                     TimeModified = post.ModifiedOn,
-                    User = _repository.GetNick(post.User.Id, user.ActiveGroup.Id)
+                    User = post.User.Id.ToString(),
+                    Event = post.Event?.Name
                 }).ToList();
             }
             else

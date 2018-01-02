@@ -1,13 +1,14 @@
 ﻿@model GroupManager.Models.EventViewModels.EventListViewModel
 
 @{
-    ViewData["Title"] = "List";
+    ViewData["Title"] = "Events";
 }
 
-<h2>List</h2>
+<h2>Events</h2>
 
 <p>
-    <a asp-action="Add">Create New</a>
+    <a asp-action="Add">Create New Event</a> |
+    <a asp-controller="Group" asp-action="Index">Back</a>
 </p>
 @if (Model.Events == null || Model.Events.Count == 0)
 {
@@ -19,13 +20,7 @@ else
         <thead>
             <tr>
                 <th>
-                    Id
-                </th>
-                <th>
                     Name
-                </th>
-                <th>
-                    Text
                 </th>
                 <th>
                     Time
@@ -38,13 +33,7 @@ else
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Text)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Time)
@@ -52,7 +41,7 @@ else
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { eventId = item.Id }) |
                         @Html.ActionLink("Details", "Details", new { eventId = item.Id }) |
-                        <a asp-action="Delete" asp-route-eventId="@item.Id">Delete</a>
+                        <a asp-action="Delete" asp-route-eventId="@item.Id" onclick="return confirm('Are you sure?')">Delete</a>
                     </td>
                 </tr>
             }

@@ -1,7 +1,7 @@
 ﻿@model GroupManager.Models.BalanceViewModels.BalanceIndexViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Group Balance";
 }
 <hr />
 <div>
@@ -29,7 +29,7 @@
                     <td>@entry.Value</td>
                     <td>@entry.Message</td>
                     <td>@entry.Time</td>
-                    <td><a asp-action="Delete" asp-route-entryId="@entry.Id">Delete</a></td>
+                    <td><a asp-action="Delete" asp-route-entryId="@entry.Id" onclick="return confirm('Are you sure?')">Delete</a></td>
                 </tr>
             }
         </table>

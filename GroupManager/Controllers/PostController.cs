@@ -23,9 +23,9 @@ namespace GroupManager.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult AddPost()
+        public IActionResult AddPost(string eventId)
         {
-            return View();
+            return View(new AddPostViewModel() { EventId = eventId });
         }
 
         [HttpPost]
@@ -37,8 +37,16 @@ namespace GroupManager.Controllers
                 return View(model);
             }
             Post post = new Post(model.Title, model.Text);
-            _repository.AddPost(post, _repository.GetUser(Guid.Parse(user.Id)).ActiveGroup.Id, Guid.Parse(user.Id));
-            return Redirect("/home");
+            if (string.IsNullOrEmpty(model.EventId))
+            {
+                _repository.AddPost(post, _repository.GetUser(Guid.Parse(user.Id)).ActiveGroup.Id, Guid.Parse(user.Id));
+                return Redirect("/home");
+            }
+            else
+            {
+                _repository.AddEventPost(post, Guid.Parse(model.EventId), Guid.Parse(user.Id));
+                return Redirect("/event/Details?eventId=" + model.EventId);
+            }
         }
 
         public async Task<IActionResult> EditPost(string postId)
@@ -85,6 +93,11 @@ namespace GroupManager.Controllers
             }
             Post post = new Post(model.Title, model.Text) { Id = Guid.Parse(model.Id) };
             _repository.UpdatePost(post);
+            post = _repository.GetPost(post.Id);
+            if (post.Event != null)
+            {
+                return Redirect("/event/Details?eventId=" + post.Event.Id);
+            }
             return Redirect("/home");
         }
 
@@ -106,7 +119,7 @@ namespace GroupManager.Controllers
                     Id = comment.Id.ToString(),
                     PostId = post.Id.ToString(),
                     Text = comment.Text,
-                    User = _repository.GetNick(comment.User.Id, post.Group.Id),
+                    User = comment.User.Id.ToString(),
                     TimePosted = comment.CreatedOn,
                     TimeModified = comment.ModifiedOn
                 }).ToList(),
@@ -115,7 +128,7 @@ namespace GroupManager.Controllers
                     Id = post.Id.ToString(),
                     Title = post.Title,
                     Text = post.Text,
-                    User = _repository.GetNick(post.User.Id, post.Group.Id),
+                    User = post.User.Id.ToString(),
                     TimePosted = post.CreatedOn,
                     TimeModified = post.ModifiedOn
                 }

@@ -75,13 +75,13 @@ namespace GroupRepository
 
         public List<Post> GetPosts(Guid groupId)
         {
-            return _context.Posts.Include(post => post.Comments).Include(post => post.User)
+            return _context.Posts.Include(post => post.Comments).Include(post => post.User).Include(post=>post.Event)
                 .Where(post => post.Group.Id == groupId).OrderByDescending(post => post.CreatedOn).ToList();
         }
 
         public Post GetPost(Guid postId)
         {
-            return _context.Posts.Include(post => post.Comments).Include(post => post.Group).FirstOrDefault(post => post.Id == postId);
+            return _context.Posts.Include(post => post.Comments).Include(post=>post.User).Include(post => post.Group).Include(post=>post.Event).FirstOrDefault(post => post.Id == postId);
         }
 
         public List<Comment> GetComments(Guid postId)
@@ -179,11 +179,8 @@ namespace GroupRepository
         public string GetNick(Guid userId, Guid groupId)
         {
             Nick nick = _context.Nicks.FirstOrDefault(nck => nck.User.Id == userId && nck.Group.Id == groupId);
-            if (nick == null)
-            {
-                return _context.Users.FirstOrDefault(user => user.Id == userId)?.Email;
-            }
-            return nick.Value;
+
+            return nick?.Value;
         }
 
         public Comment GetComment(Guid commentId)
@@ -321,6 +318,25 @@ namespace GroupRepository
             }
             e.UsersInvited.Add(user);
             _context.SaveChanges();
+        }
+
+        public void AddEventPost(Post post, Guid eventId, Guid userId)
+        {
+            User user = GetUser(userId);
+            Event e = _context.Events.Include(ev => ev.Posts).FirstOrDefault(ev => ev.Id == eventId);
+            post.User = user;
+            post.Event = e;
+            post.Group = user.ActiveGroup;
+            user.Posts.Add(post);
+            e.Posts.Add(post);
+            _context.Posts.Add(post);
+            _context.SaveChanges();
+        }
+
+        public List<Post> GetEventPosts(Guid eventId)
+        {
+            return _context.Events.Include(ev => ev.Posts).FirstOrDefault(ev => ev.Id == eventId).Posts
+                .OrderByDescending(p => p.CreatedOn).ToList();
         }
     }
 }

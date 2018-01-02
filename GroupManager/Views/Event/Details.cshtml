@@ -4,43 +4,32 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>@Model.Name</h2>
 
 <div>
-    <h4>EventViewModel</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Id)
+            Description
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Id)
+            <pre class="text-info">@Model.Text</pre>
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            Time
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Text)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Text)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Time)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Time)
+            @Model.Time
         </dd>
     </dl>
 </div>
 <h4>My status: @Model.CurrentUserStatus</h4>
+<hr />
+<h5>Change status</h5>
 <a asp-action="SetStatus" asp-route-eventId="@Model.Id" asp-route-status="ATTENDING">Attending</a> |
 <a asp-action="SetStatus" asp-route-eventId="@Model.Id" asp-route-status="NOT_ATTENDING">Not Attending</a> |
 <a asp-action="SetStatus" asp-route-eventId="@Model.Id" asp-route-status="INVITED">Invited</a>
-<hr/>
+<hr />
 <h3>Users attending:</h3>
 @if (Model.UsersAttending == null || Model.UsersAttending.Count == 0)
 {
@@ -52,7 +41,22 @@ else
         @foreach (var user in Model.UsersAttending)
         {
             <tr>
-                <td><a asp-controller="User" asp-action="Details" asp-route-userId="@user.Id">@user.Nick</a></td>
+                <td>
+                    <a asp-controller="User" asp-action="Details" asp-route-userId="@user.Id">
+                        @if (!string.IsNullOrEmpty(user.Nick))
+                        {
+                            <div align="center" class="h4"><abbr title="@user.Name @user.Surname">@user.Nick</abbr></div>
+                        }
+                        else if (!string.IsNullOrEmpty(user.Name) || !string.IsNullOrEmpty(user.Surname))
+                        {
+                            <div align="center">@user.Name @user.Surname</div>
+                        }
+                        else
+                        {
+                            <div align="center">@user.Email</div>
+                        }
+                    </a>
+                </td>
             </tr>
         }
     </table>
@@ -69,7 +73,22 @@ else
         @foreach (var user in Model.UsersNotAttending)
         {
             <tr>
-                <td><a asp-controller="User" asp-action="Details" asp-route-userId="@user.Id">@user.Nick</a></td>
+                <td>
+                    <a asp-controller="User" asp-action="Details" asp-route-userId="@user.Id">
+                        @if (!string.IsNullOrEmpty(user.Nick))
+                        {
+                            <div align="center" class="h4"><abbr title="@user.Name @user.Surname">@user.Nick</abbr></div>
+                        }
+                        else if (!string.IsNullOrEmpty(user.Name) || !string.IsNullOrEmpty(user.Surname))
+                        {
+                            <div align="center">@user.Name @user.Surname</div>
+                        }
+                        else
+                        {
+                            <div align="center">@user.Email</div>
+                        }
+                    </a>
+                </td>
             </tr>
         }
     </table>
@@ -86,13 +105,43 @@ else
         @foreach (var user in Model.UsersInvited)
         {
             <tr>
-                <td><a asp-controller="User" asp-action="Details" asp-route-userId="@user.Id">@user.Nick</a></td>
+                <td>
+                    <a asp-controller="User" asp-action="Details" asp-route-userId="@user.Id">
+                        @if (!string.IsNullOrEmpty(user.Nick))
+                        {
+                            <div align="center" class="h4"><abbr title="@user.Name @user.Surname">@user.Nick</abbr></div>
+                        }
+                        else if (!string.IsNullOrEmpty(user.Name) || !string.IsNullOrEmpty(user.Surname))
+                        {
+                            <div align="center">@user.Name @user.Surname</div>
+                        }
+                        else
+                        {
+                            <div align="center">@user.Email</div>
+                        }
+                    </a>
+                </td>
             </tr>
         }
     </table>
 }
-<hr/>
+<hr />
+<h3>Posts:</h3>
+<a asp-action="AddPost" asp-route-eventId="@Model.Id">Add post</a>
+@foreach (var post in Model.Posts)
+{
+    @Html.Partial("PostPartial", post);
+    <div>
+        <a asp-controller="Post" asp-action="EditPost" asp-route-postId="@post.Id">Edit</a> |
+        <a asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">Show comments</a>
+    </div>
+}
+@if (Model.Posts == null || Model.Posts.Count == 0)
+{
+    <h4 align="center">No posts available</h4>
+}
+<hr />
 <div>
     @Html.ActionLink("Edit", "Edit", new { eventId = Model.Id }) |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="List">Back to List</a>
 </div>

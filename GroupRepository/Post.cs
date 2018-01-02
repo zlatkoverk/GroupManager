@@ -13,6 +13,7 @@ namespace GroupRepository
         public List<Comment> Comments { get; set; }
         public User User { get; set; }
         public Group Group { get; set; }
+        public Event Event { get; set; }
 
         public Post(string title, string text)
         {
