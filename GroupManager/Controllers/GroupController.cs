@@ -95,6 +95,12 @@ namespace GroupManager.Controllers
         {
             ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
             User user = _repository.GetUser(Guid.Parse(appUser.Id));
+
+            if (user.ActiveGroup == null)
+            {
+                return Forbid();
+            }
+
             ChangeNickViewModel model = new ChangeNickViewModel() { Nick = _repository.GetNick(user.Id, user.ActiveGroup.Id) };
             return View(model);
         }

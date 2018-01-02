@@ -28,6 +28,11 @@ namespace GroupManager.Controllers
             ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
             User user = _repository.GetUser(Guid.Parse(appUser.Id));
 
+            if (user.ActiveGroup == null)
+            {
+                return Forbid();
+            }
+
             List<BalanceEntry> entries = _repository.GetBalanceEntries(user.ActiveGroup.Id);
             BalanceIndexViewModel model = new BalanceIndexViewModel()
             {

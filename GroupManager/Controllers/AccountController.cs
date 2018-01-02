@@ -237,7 +237,7 @@ namespace GroupManager.Controllers
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
                     
-                    //Custom code
+                    //Custom code - adds user to GroupRepository
                     _repository.AddUser(new User(model.Email, user.Id));
 
                     return RedirectToLocal(returnUrl);
@@ -327,6 +327,10 @@ namespace GroupManager.Controllers
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                        //Custom code
+                        _repository.AddUser(new User(model.Email, user.Id));
+
                         return RedirectToLocal(returnUrl);
                     }
                 }
