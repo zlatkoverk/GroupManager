@@ -20,5 +20,6 @@ namespace GroupManager.Models.EventViewModels
         public List<UserViewModel> UsersInvited { get; set; }
         public string CurrentUserStatus { get; set; }
         public List<IndexPostViewModel> Posts { get; set; }
+        public bool Upcoming { get; set; }
     }
 }

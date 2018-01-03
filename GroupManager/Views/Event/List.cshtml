@@ -31,19 +31,39 @@ else
         <tbody>
             @foreach (var item in Model.Events)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Time)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { eventId = item.Id }) |
-                        @Html.ActionLink("Details", "Details", new { eventId = item.Id }) |
-                        <a asp-action="Delete" asp-route-eventId="@item.Id" onclick="return confirm('Are you sure?')">Delete</a>
-                    </td>
-                </tr>
+                if (item.Upcoming)
+                {
+                    <tr class="panel panel-success">
+                        <td class="panel-body">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="panel-heading">
+                            @Html.DisplayFor(modelItem => item.Time)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { eventId = item.Id }) |
+                            @Html.ActionLink("Details", "Details", new { eventId = item.Id }) |
+                            <a asp-action="Delete" asp-route-eventId="@item.Id" onclick="return confirm('Are you sure?')">Delete</a>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="panel panel-warning">
+                        <td class="panel-body">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="panel-heading">
+                            @Html.DisplayFor(modelItem => item.Time)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { eventId = item.Id }) |
+                            @Html.ActionLink("Details", "Details", new { eventId = item.Id }) |
+                            <a asp-action="Delete" asp-route-eventId="@item.Id" onclick="return confirm('Are you sure?')">Delete</a>
+                        </td>
+                    </tr>
+                }
+
             }
         </tbody>
     </table>

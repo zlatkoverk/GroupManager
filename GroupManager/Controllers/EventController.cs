@@ -47,7 +47,8 @@ namespace GroupManager.Controllers
                     Id = e.Id.ToString(),
                     Name = e.Name,
                     Text = e.Text,
-                    Time = e.Time
+                    Time = e.Time,
+                    Upcoming = DateTime.Now.CompareTo(e.Time) < 0
                 }).ToList()
             };
 
