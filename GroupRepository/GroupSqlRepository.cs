@@ -129,7 +129,7 @@ namespace GroupRepository
 
         public User GetUser(string email)
         {
-            return _context.Users.FirstOrDefault(user => user.Email == email);
+            return _context.Users.Include(u=>u.ActiveGroup).Include(u=>u.Groups).FirstOrDefault(user => user.Email == email);
         }
 
         public void AddComment(Comment comment, Guid userId, Guid postId)

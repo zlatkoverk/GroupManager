@@ -16,13 +16,16 @@ else
         <div class="panel panel-info">
             @if (!string.IsNullOrEmpty(post.Event))
             {
-            <div class="panel-heading">Posted in event: @post.Event</div>
+                <div class="panel-heading">Posted in event: @post.Event</div>
             }
             <div class="panel-body">
                 @Html.Partial("PostPartial", post)
             </div>
             <div class="panel-footer">
-                <a asp-controller="Post" asp-action="EditPost" asp-route-postId="@post.Id">Edit</a> |
+                @if (post.CurrentUserCanEdit)
+                {
+                <span><a asp-controller="Post" asp-action="EditPost" asp-route-postId="@post.Id">Edit</a> | </span>
+                }
                 <a asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">Show comments</a>
             </div>
         </div>

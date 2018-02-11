@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using GroupManager.Models
+@using GroupRepository
+@using Microsoft.AspNetCore.Http
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IGroupRepository Repository
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = Repository.GetUser(UserManager.GetUserName(User));
+    var otherGroups = user.Groups.Where(g => g != user.ActiveGroup).ToList();
+
+    <li class="has-dropdown">
+        <a asp-controller="Group" asp-action="Index">Groups</a>
+        <ul class="dropdown">
+            <span style="color: aqua">Active</span>
+            @if (user.ActiveGroup == null)
+            {
+                <li>You don't have active group</li>
+            }
+            else
+            {
+                <li><a>@user.ActiveGroup.Name</a></li>
+            }
+            <span style="color: aqua">Switch to</span>
+            @foreach (var group in otherGroups)
+            {
+                <li><a asp-controller="Group" asp-action="SetActive" asp-route-groupId="@group.Id">@group.Name</a></li>
+            }
+            @if (otherGroups.Count == 0)
+            {
+                <li>You don't have other groups</li>
+            }
+        </ul>
+    </li>
+}

@@ -6,12 +6,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using GroupManager.Models;
 using GroupManager.Models.UserViewModels;
+using GroupManager.Utilities;
 using GroupRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace GroupManager.Controllers
 {
@@ -20,18 +22,21 @@ namespace GroupManager.Controllers
     {
         private readonly IGroupRepository _repository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public UserController(IGroupRepository repository, UserManager<ApplicationUser> userManager)
+
+        public UserController(IGroupRepository repository, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _repository = repository;
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index()
         {
             ApplicationUser appUser = await _userManager.GetUserAsync(HttpContext.User);
             User user = _repository.GetUser(Guid.Parse(appUser.Id));
-            UserViewModel model = new UserViewModel()
+            UserUploadModel model = new UserUploadModel()
             {
                 Name = user.Name,
                 Surname = user.Surname,
@@ -42,7 +47,7 @@ namespace GroupManager.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(UserViewModel model)
+        public async Task<IActionResult> Index(UserUploadModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +58,20 @@ namespace GroupManager.Controllers
 
             user.Name = model.Name;
             user.Surname = model.Surname;
-            user.Picture = model.PictureURI;
+
+            if (model.Picture != null)
+            {
+                byte[] imageBytes;
+                using (var stream = new MemoryStream())
+                {
+                    await model.Picture.CopyToAsync(stream);
+                    imageBytes = stream.ToArray();
+                }
+
+                var uploader = new AzureStorageUtility(_configuration["storageAccountName"],
+                    _configuration["storageAccountKey"]);
+                user.Picture = await uploader.Upload(_configuration["storageContainerName"], imageBytes);
+            }
 
             _repository.UpdateUser(user);
 

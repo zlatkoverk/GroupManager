@@ -141,7 +141,6 @@ namespace GroupManager.Controllers
             if (e == null)
             {
                 return Forbid();
-
             }
 
             Func<GroupRepository.User, UserViewModel> mapperFunc = u => new UserViewModel()
@@ -171,7 +170,8 @@ namespace GroupManager.Controllers
                     Text = p.Text,
                     TimeModified = p.ModifiedOn,
                     TimePosted = p.CreatedOn,
-                    Title = p.Title
+                    Title = p.Title,
+                    CurrentUserCanEdit = p.User == user
                 }).ToList()
             };
 

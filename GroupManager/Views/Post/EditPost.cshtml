@@ -24,13 +24,10 @@
             <input type="hidden" asp-for="Id" value="@Model.Id"/>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
+                <a class="btn btn-default" asp-controller="Post" asp-action="Index" asp-route-postId="@Model.Id">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a href="/home">Back to List</a>
 </div>
 
 @section Scripts {

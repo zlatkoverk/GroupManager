@@ -18,5 +18,6 @@ namespace GroupManager.Models.GroupViewModels
         public DateTime TimePosted { get; set; }
         public DateTime? TimeModified { get; set; }
         public string Event { get; set; }
+        public bool CurrentUserCanEdit { get; set; }
     }
 }

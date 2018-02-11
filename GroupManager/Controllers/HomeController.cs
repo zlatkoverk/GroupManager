@@ -47,12 +47,13 @@ namespace GroupManager.Controllers
                     TimePosted = post.CreatedOn,
                     TimeModified = post.ModifiedOn,
                     User = post.User.Id.ToString(),
-                    Event = post.Event?.Name
+                    Event = post.Event?.Name,
+                    CurrentUserCanEdit = post.User == user
                 }).ToList();
             }
             else
             {
-                model.Posts=new List<IndexPostViewModel>();
+                model.Posts = new List<IndexPostViewModel>();
             }
             return View(model);
         }

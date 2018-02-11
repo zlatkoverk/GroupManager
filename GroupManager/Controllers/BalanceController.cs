@@ -38,7 +38,7 @@ namespace GroupManager.Controllers
             {
                 Entries = entries.Select(e => new BalanceEntryViewModel()
                 {
-                    User = _repository.GetNick(e.User.Id, user.ActiveGroup.Id),
+                    User = (e.User.Name + " " + e.User.Surname).Trim().Length == 0 ? e.User.Email : e.User.Name + " " + e.User.Surname,
                     Value = e.Value,
                     Message = e.Message,
                     Time = e.Time,

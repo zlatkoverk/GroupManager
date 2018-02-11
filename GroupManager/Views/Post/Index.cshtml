@@ -27,5 +27,12 @@
     </div>
 </form>
 <div>
-    <a href="/home">Back</a>
+    @if (Model.Post.Event == null)
+    {
+        <a asp-controller="Home" asp-action="Index">Back</a>
+    }
+    else
+    {
+        <a asp-controller="Event" asp-action="Details" asp-route-eventId="@Model.Post.Event">Back to event</a>
+    }
 </div>

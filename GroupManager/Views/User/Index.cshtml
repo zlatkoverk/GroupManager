@@ -1,15 +1,19 @@
-﻿@model GroupManager.Models.UserViewModels.UserViewModel
+﻿@model GroupManager.Models.UserViewModels.UserUploadModel
 
 @{
-    ViewData["Title"] = "Edit user";
+    ViewData["Title"] = "My profile";
 }
 
-<h2>Edit User</h2>
+<h2>@ViewData["Title"]</h2>
 
 <hr />
 @if (!string.IsNullOrEmpty(Model.PictureURI))
 {
     <img class="img-thumbnail" src="@Model.PictureURI"/>
+}
+else
+{
+    <img class="img-thumbnail" src="/images/noprofile.png"/>
 }
 <div class="row">
     <div class="col-md-4">
@@ -25,9 +29,9 @@
                 <input asp-for="Surname" class="form-control" />
                 <span asp-validation-for="Surname" class="text-danger"></span>
             </div><div class="form-group">
-                <label asp-for="PictureURI" class="control-label"></label>
-                <input asp-for="PictureURI" class="form-control" />
-                <span asp-validation-for="PictureURI" class="text-danger"></span>
+                <label asp-for="Picture" class="control-label"></label>
+                <input asp-for="Picture" class="form-control" />
+                <span asp-validation-for="Picture" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" value="@Model.Id" />
             <div class="form-group">

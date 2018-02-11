@@ -4,48 +4,34 @@
     ViewData["Title"] = "Users";
 }
 
-<h2>Users</h2>
+<div id="fh5co-blog">
+    <div class="container">
+        <div class="row animate-box">
+            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+                <h2>Users in this group</h2>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var user in Model)
+            {
+                <div class="col-md-4">
+                    @if (user.PictureURI == null)
+                    {
+                        user.PictureURI = "/images/noprofile.png";
+                    }
+                    <div class="fh5co-blog animate-box">
+                        <a href="#" class="blog-bg" style="background-image: url(@user.PictureURI);"></a>
+                        <div class="blog-text">
+                            <h3><a asp-action="Details" asp-route-userId="@user.Id">@user.Email</a></h3>
+                            <p>Name: @user.Name</p>
+                            <p>Surname: @user.Surname</p>
+                            <p>Nick: @user.Nick</p>
+                        </div>
+                    </div>
+                </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Surname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nick)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Surname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nick)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { userId = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            }
+        </div>
+    </div>
+</div>
 <a asp-controller="Group" asp-action="Index">Back</a>

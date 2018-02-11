@@ -130,10 +130,18 @@ else
 <a asp-action="AddPost" asp-route-eventId="@Model.Id">Add post</a>
 @foreach (var post in Model.Posts)
 {
-    @Html.Partial("PostPartial", post);
-    <div>
-        <a asp-controller="Post" asp-action="EditPost" asp-route-postId="@post.Id">Edit</a> |
-        <a asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">Show comments</a>
+    <div class="panel panel-info">
+        <div class="panel-body">
+            @Html.Partial("PostPartial", post)
+        </div>
+
+        <div class="panel-footer">
+            @if (post.CurrentUserCanEdit)
+            {
+                <span><a asp-controller="Post" asp-action="EditPost" asp-route-postId="@post.Id">Edit</a> | </span>
+            }
+            <a asp-controller="Post" asp-action="Index" asp-route-postId="@post.Id">Show comments</a>
+        </div>
     </div>
 }
 @if (Model.Posts == null || Model.Posts.Count == 0)
