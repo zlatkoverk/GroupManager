@@ -59,9 +59,6 @@ namespace GroupManager
             services.AddScoped<GroupDbContext>(c=>new GroupDbContext(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddTransient<IGroupRepository, GroupSqlRepository>();
 
-            System.Data.Entity.Database.SetInitializer<GroupDbContext>(new System.Data.Entity.DropCreateDatabaseIfModelChanges<GroupDbContext>());
-
-
             services.AddMvc();
         }
 
