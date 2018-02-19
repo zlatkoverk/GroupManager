@@ -131,7 +131,7 @@ namespace GroupManager.Controllers
                     User = post.User.Id.ToString(),
                     TimePosted = post.CreatedOn,
                     TimeModified = post.ModifiedOn,
-                    Event = post.Event.Id.ToString()
+                    Event = post.Event?.Id.ToString()
                 }
             };
 
